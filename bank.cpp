@@ -23,7 +23,37 @@ typedef struct acc {
 }ACC;
 
 vector<ACC> account;
-
+void init()
+{
+	FILE* fp;
+	int res;
+	int account1, bank1, password1, money1;
+	ACC tempaccount;
+	fp = fopen("input.txt", "r");
+	while (1)
+	{
+		res = fscanf(fp, "%d %d %d %d", &account1, &bank1, &password1, &money1);
+		if (res == EOF)
+			break;
+		tempaccount.account = account1;
+		tempaccount.bank = bank1;
+		tempaccount.password = password1;
+		tempaccount.money = money1;
+		account.push_back(tempaccount);
+	}
+	fclose(fp);
+}
+void save()
+{
+	FILE* fp;
+	fp = fopen("input.txt", "w");
+	int i;
+	for (i = 0; i < account.size(); i++)
+	{
+		fprintf(fp, "%d %d %d %d\n", account[i].account, account[i].bank, account[i].password, account[i].money);
+	}
+	fclose(fp);
+}
 int accountcheck(int tempaccount) //존재하는 계좌이면 1, 존재하지 않는 계좌이면 0;
 {
 	int i;
@@ -187,7 +217,7 @@ void withdraw()
 			if (money <= account[i].money)
 			{
 				account[i].money -= money;
-				printf("%d원의 돈이 출금되었습니다.(잔액 : %d) ", money, account[i].money);
+				printf("%d원의 돈이 출금되었습니다.(잔액 : %d) \n", money, account[i].money);
 				break;
 			}
 			else {
@@ -260,6 +290,7 @@ void deleteaccount()
 int main(void)
 {
 	int menu;
+	init();
 	while (1)
 	{
 		//system("cls");
@@ -299,4 +330,5 @@ int main(void)
 		if (menu == 7)
 			break;
 	}
+	save();
 }
