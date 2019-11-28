@@ -279,6 +279,88 @@ void checkmoney()
 
 void transfer()
 {
+	int fromaccount;
+	int toaccount;
+	int password;
+	int cnt = 0;
+	int i;
+	int money;
+	acc* pointer = NULL;//출금하고자 하는 계좌의 주소 저장.
+	int flag;
+	while (1)//출금하고자 하는 계좌번호 받기
+	{
+		printf("계좌번호를 입력하시오:");
+		scanf("%d", &(fromaccount));
+		flag = accountcheck(fromaccount);
+		if (flag == 1)
+			break;
+		else
+			printf("존재하지 않는 계좌번호 입니다. 다시 입력하세요!\n");
+	}
+	while (1)//계좌의 비밀번호 받기(3회 잘못입력하면 출금 종료)
+	{
+		printf("패스워드를 입력하십시오 : ");
+		scanf("%d", &password);
+		if (passwordcheck(fromaccount, password) == 1)
+			break;
+		else
+		{
+			printf("패스워드가 동일하지 않습니다.\n");
+			cnt++;
+		}
+		if (cnt == 3)
+		{
+			printf("비밀번호를 3회 잘못 입력하셨습니다.\n");
+			break;
+		}
+	}
+	if (cnt == 3)
+	{
+		printf("다시 처음부터 진행하여 주십시오.\n");
+	}
+	else
+	{
+		for (i = 0; i < account.size(); i++)
+		{
+			if (account[i].account == fromaccount)
+			{
+				pointer = &(account[i]);//출금하려고 하는 주소 저장.
+				break;
+			}
+		}
+		while (1)//보내고자 하는 계좌번호 받기
+		{
+			printf("보낼 계좌번호를 입력하시오:");
+			scanf("%d", &(toaccount));
+			flag = accountcheck(toaccount);
+			if (flag == 1)
+				break;
+			else
+				printf("존재하지 않는 계좌번호 입니다. 다시 입력하세요!\n");
+		}
+		while (1)
+		{
+			printf("얼마를 보내시겠습니까(잔액 : %d) : ", (*pointer).money);
+			scanf("%d", &money);
+			if (money <= (*pointer).money)
+			{
+				(*pointer).money -= money;
+				for (i = 0; i < account.size(); i++)
+				{
+					if (account[i].account == toaccount)
+					{
+						account[i].money += money;
+						break;
+					}
+				}
+				printf("%d원의 돈을 보냈습니다.(잔액 : %d) \n", money, (*pointer).money);
+				break;
+			}
+			else {
+				printf("잔액이 부족합니다. 다시 입력하여 주십시오.\n");
+			}
+		}
+	}
 }
 void record()
 {
